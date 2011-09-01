@@ -17,7 +17,7 @@ def build(bld):
   obj.cxxflags = ["-g", "-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-Wall"]
   obj.uselib = "svn"
   obj.target = "nodesvn"
-  obj.source = "src/svn.cc"
+  obj.source = "src/svn.cc srv/svnfs.cc"
   obj.includes = build_paths('include') + build_paths('include/subversion-1') + build_paths('include/apr-1/')
 
 def all(bld):
