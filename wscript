@@ -10,6 +10,9 @@ def configure(conf):
   conf.check(lib='svn_fs_base-1', libpath=build_paths('lib'))
   conf.check(lib='svn_fs_fs-1', libpath=build_paths('lib'))
   conf.check(lib='svn_client-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_subr-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_repos-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_ra-1', libpath=build_paths('lib'))
 
 
 def build(bld):
@@ -17,7 +20,7 @@ def build(bld):
   obj.cxxflags = ["-g", "-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-Wall"]
   obj.uselib = "svn"
   obj.target = "nodesvn"
-  obj.source = "src/svn.cc srv/svnfs.cc"
+  obj.source = "src/svn.cc"
   obj.includes = build_paths('include') + build_paths('include/subversion-1') + build_paths('include/apr-1/')
 
 def all(bld):
