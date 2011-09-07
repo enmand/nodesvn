@@ -50,8 +50,7 @@ Handle<Value> SVN::Open(const Arguments &args)
 	return Null();
 }
 
-extern "C" void
-init (Handle<Object> target)
+extern "C" void init (Handle<Object> target)
 {
 	HandleScope scope;
 	SVN::Initiaize(target);
