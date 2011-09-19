@@ -39,7 +39,7 @@ Handle<Value> SVN::PathGetter(Local<String> property, const AccessorInfo& info)
 
 	HandleScope scope;
 
-	return scope.Close(String::NewSymbol("DerpKyleHerp"));
+	return scope.Close(String::NewSymbol("PathHere"));
 }
 
 Handle<Value> SVN::Open(const Arguments &args)
