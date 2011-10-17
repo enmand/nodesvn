@@ -10,10 +10,6 @@ void SVN::Initiaize(Handle<Object> target)
 	t->InstanceTemplate()->SetInternalFieldCount(1);
 	t->SetClassName(String::NewSymbol("SVN"));
 
-	NODE_SET_PROTOTYPE_METHOD(t, "open", Open);
-
-	t->PrototypeTemplate()->SetAccessor(String::NewSymbol("path"), PathGetter);
-
 	target->Set(String::NewSymbol("SVN"), t->GetFunction());
 }
 
