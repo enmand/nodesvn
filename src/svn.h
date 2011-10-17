@@ -75,6 +75,8 @@ protected:
 private:
 	apr_pool_t *pool;
 	svn_client_ctx_t *ctx;
+	
+	Handle<String> error(svn_error_t *error);
 };
 
 #endif

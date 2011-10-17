@@ -47,6 +47,24 @@ Handle<Value> SVN::cat(const Arguments &args)
 {
 }
 
+Handle<String> SVN::error(svn_error_t *error)
+{
+	HandleScope scope;
+	svn_error_t *err_it = error;
+	Local<String> strerror = String::New("SVN Error Occured: ");
+
+	while( err_it )
+	{
+		char buffer[256];
+		svn_strerror(err_it->apr_err, buffer, sizeof(buffer));
+		String::Concat(strerror, String::New(" ( "));
+		String::Concat(strerror, String::New(buffer));
+		String::Concat(strerror, String::New(" ) "));
+		String::Concat(strerror, String::New(err_it->message));
+	}
+	return scope.Close(strerror);
+}
+
 extern "C" void init (Handle<Object> target)
 {
 	HandleScope scope;
