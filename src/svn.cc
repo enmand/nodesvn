@@ -1,5 +1,4 @@
 #include "svn.h"
-#include <sys/stat.h>
 
 void SVN::Initiaize(Handle<Object> target)
 {

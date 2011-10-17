@@ -30,6 +30,7 @@
 
 // Other
 #include <stdlib.h>
+#include <sys/stat.h>
 
 using namespace node;
 using namespace v8;
