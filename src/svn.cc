@@ -1,4 +1,5 @@
 #include "svn.h"
+#include <sys/stat.h>
 
 void SVN::Initiaize(Handle<Object> target)
 {
@@ -20,34 +21,34 @@ Handle<Value> SVN::New(const Arguments &args)
 {
 	HandleScope scope;
 
-	if(args.Length() == 0 || !args[0]->IsString())
-	{
-		return ThrowException(String::New("Must provide repository path as an arguement"));
-	}
-
-	String::Utf8Value path(args[0]->ToString());
-	SVN *svn = new SVN(*path);
+	SVN *svn = new SVN();
 	svn->Wrap(args.This());
 
 	return args.This();
 }
 
-Handle<Value> SVN::PathGetter(Local<String> property, const AccessorInfo& info)
-{
-	SVN *svn = ObjectWrap::Unwrap<SVN>(info.This());
-	assert(svn);
-
-	HandleScope scope;
-
-	return scope.Close(String::NewSymbol("PathHere"));
-}
-
 Handle<Value> SVN::Open(const Arguments &args)
 {
-	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
-	assert(svn);
+	HandleScope scope;
+	struct stat _wc_config;
 
-	return Null();
+	if(args.Length() == 0 && !args[0]->IsString())
+	{
+		return ThrowException(String::New("You must provide a valid Working Copy path"));
+	}
+
+	String::Utf8Value path(args[0]->ToString());
+
+	if(stat(*path, &_wc_config) < 0)
+	{
+		return ThrowException(String::New("Working copy path not found"));
+	}
+
+	return args.This();
+}
+
+Handle<Value> SVN::cat(const Arguments &args)
+{
 }
 
 extern "C" void init (Handle<Object> target)

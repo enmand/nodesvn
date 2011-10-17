@@ -26,6 +26,7 @@
 #include <svn_pools.h>
 #include <svn_path.h>
 #include <svn_utf.h>
+#include <svn_client.h>
 
 // Other
 #include <stdlib.h>
@@ -36,9 +37,12 @@ using namespace v8;
 class SVN : ObjectWrap
 {
 public:
-	SVN(const char *path) : path(path) {}
+	SVN() {}
 	static void Initiaize(Handle<Object> target); // V8/Node initializer
 
+	static Handle<Value> Open(const Arguments &args);
+
+	// SVN-defined functions
 	static Handle<Value> checkout(const Arguments &args);
 	static Handle<Value> import(const Arguments &argss);
 	static Handle<Value> blame(const Arguments &args);
@@ -58,24 +62,19 @@ public:
 	static Handle<Value> status(const Arguments &args);
 	static Handle<Value> update(const Arguments &args);
 
-	// Filesystem functions (svn_fs)
-	
 
 	~SVN() {}
 protected:
 	static Handle<Value> New(const Arguments &args); // 'new' construct
 
 	// Class methods
-	static Handle<Value> Open(const Arguments &args);
-	static Handle<Value> Read(const Arguments &args);
 
 	// Accessors
-	static Handle<Value> PathGetter(Local<String> property, const AccessorInfo& info);
 
 	// Inceptors
 private:
-	const char *path;
 	apr_pool_t *pool;
+	svn_client_ctx_t *ctx;
 };
 
 #endif
