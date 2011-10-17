@@ -30,14 +30,18 @@ Handle<Value> SVN::Open(const Arguments &args)
 
 	if(args.Length() == 0 && !args[0]->IsString())
 	{
-		return ThrowException(String::New("You must provide a valid Working Copy path"));
+		return ThrowException(Exception::Error(
+					String::New("You must provide a valid Working Copy path")
+				));
 	}
 
 	String::Utf8Value path(args[0]->ToString());
 
 	if(stat(*path, &_wc_config) < 0)
 	{
-		return ThrowException(String::New("Working copy path not found"));
+		return ThrowException(Exception::Error(
+					String::New("Working copy path not found")
+				));
 	}
 
 	return args.This();
