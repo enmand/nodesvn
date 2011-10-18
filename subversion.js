@@ -2,7 +2,12 @@ nodesvn = require('./build/default/nodesvn');
 
 var subversion = nodesvn.SVN;
 
-exports.SVN = function(path)
+function SVN()
 {
-	return new subversion(path);
+	if(!this.client)
+	{
+		this.client = new nodesvn.SVN();
+	}
 }
+
+exports.SVN = SVN;

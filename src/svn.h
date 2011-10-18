@@ -35,16 +35,17 @@
 using namespace node;
 using namespace v8;
 
-class SVN : ObjectWrap
+class SVN : public ObjectWrap
 {
 public:
-	SVN() {}
-	static void Initiaize(Handle<Object> target); // V8/Node initializer
+	static Persistent<FunctionTemplate> ct;
 
-	static Handle<Value> Open(const Arguments &args);
+	SVN(const char *config);
+	static void InitModule(Handle<Object> target); // V8/Node initializer
+	static Handle<Value> New(const Arguments &args); // 'new' construct
 
 	// SVN-defined functions
-	static Handle<Value> checkout(const Arguments &args);
+/*	static Handle<Value> checkout(const Arguments &args);
 	static Handle<Value> import(const Arguments &argss);
 	static Handle<Value> blame(const Arguments &args);
 	static Handle<Value> cat(const Arguments &args);
@@ -63,10 +64,15 @@ public:
 	static Handle<Value> status(const Arguments &args);
 	static Handle<Value> update(const Arguments &args);
 
+	// SVN baton authentication
+	static Handle<Value> authenticate(const Arguments &args);*/
+	~SVN()
+	{
+		svn_pool_destroy(this->pool);
+		this->pool = NULL;
+	}
 
-	~SVN() {}
 protected:
-	static Handle<Value> New(const Arguments &args); // 'new' construct
 
 	// Class methods
 
@@ -76,7 +82,8 @@ protected:
 private:
 	apr_pool_t *pool;
 	svn_client_ctx_t *ctx;
-	
+
+	const char* config; // Path to config	
 	Handle<String> error(svn_error_t *error);
 };
 
