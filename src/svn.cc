@@ -6,6 +6,8 @@ SVN::SVN(const char *config = NULL)
 
 	svn_error_t *err;
 
+	apr_initialize();
+
 	this->pool = svn_pool_create(NULL); // Create the APR memory pool
 	
 	// Create our client context
