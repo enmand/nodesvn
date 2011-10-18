@@ -48,6 +48,7 @@ public:
 	{
 		svn_pool_destroy(this->pool);
 		this->pool = NULL;
+		apr_terminate();
 	}
 
 protected:
