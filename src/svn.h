@@ -74,6 +74,7 @@ protected:
 
 	// SVN baton authentication
 	static Handle<Value> __authenticate(const Arguments &args);
+	void authenticate(const char *user, const char *secret);
 	// Class methods
 
 	// Accessors

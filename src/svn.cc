@@ -72,13 +72,32 @@ Handle<Value> SVN::__cat(const Arguments &args)
 
 	revision.value.number = svn_opt_revision_unspecified;
 }
+
 Handle<Value> SVN::__authenticate(const Arguments &args)
 {
 	HandleScope scope;
 
 	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
 
+	if(args.Length() < 2 && (args[0]->IsString() && args[1]->IsString()))
+	{
+		return ThrowException(Exception::Error(
+				String::New("You must provide both the username and the password for authentication")
+			));
+	}
+
+	String::AsciiValue username(args[0]->ToString());
+	String::AsciiValue password(args[0]->ToString());
+	svn->authenticate(*username, *password);
+
 	return Undefined();
+}
+
+void SVN::authenticate(const char *user, const char *secret)
+{
+	svn_auth_provider_object_t *providers;
+	
+	providers = apr_array_make(this->pool, 2, sizeof(svn_auth_provider_object_t*));
 }
 
 Handle<String> SVN::error(svn_error_t *error)
