@@ -44,28 +44,6 @@ public:
 	static void InitModule(Handle<Object> target); // V8/Node initializer
 	static Handle<Value> New(const Arguments &args); // 'new' construct
 
-	// SVN-defined functions
-/*	static Handle<Value> checkout(const Arguments &args);
-	static Handle<Value> import(const Arguments &argss);
-	static Handle<Value> blame(const Arguments &args);
-	static Handle<Value> cat(const Arguments &args);
-	static Handle<Value> copy(const Arguments &args);
-	static Handle<Value> del(const Arguments &args);
-	static Handle<Value> exp(const Arguments &args);
-	static Handle<Value> info(const Arguments &args);
-	static Handle<Value> list(const Arguments &args);
-	static Handle<Value> log(const Arguments &args);
-	static Handle<Value> mkdir(const Arguments &args);
-	static Handle<Value> move(const Arguments &args);
-	static Handle<Value> add(const Arguments &args);
-	static Handle<Value> cleanup(const Arguments &args);
-	static Handle<Value> commit(const Arguments &args);
-	static Handle<Value> revert(const Arguments &args);
-	static Handle<Value> status(const Arguments &args);
-	static Handle<Value> update(const Arguments &args);
-
-	// SVN baton authentication
-	static Handle<Value> authenticate(const Arguments &args);*/
 	~SVN()
 	{
 		svn_pool_destroy(this->pool);
@@ -73,7 +51,28 @@ public:
 	}
 
 protected:
+	// SVN-defined functions
+	static Handle<Value> __checkout(const Arguments &args);
+	static Handle<Value> __import(const Arguments &argss);
+	static Handle<Value> __blame(const Arguments &args);
+	static Handle<Value> __cat(const Arguments &args);
+	static Handle<Value> __copy(const Arguments &args);
+	static Handle<Value> __del(const Arguments &args);
+	static Handle<Value> __exp(const Arguments &args);
+	static Handle<Value> __info(const Arguments &args);
+	static Handle<Value> __list(const Arguments &args);
+	static Handle<Value> __log(const Arguments &args);
+	static Handle<Value> __mkdir(const Arguments &args);
+	static Handle<Value> __move(const Arguments &args);
+	static Handle<Value> __add(const Arguments &args);
+	static Handle<Value> __cleanup(const Arguments &args);
+	static Handle<Value> __commit(const Arguments &args);
+	static Handle<Value> __revert(const Arguments &args);
+	static Handle<Value> __status(const Arguments &args);
+	static Handle<Value> __update(const Arguments &args);
 
+	// SVN baton authentication
+	static Handle<Value> __authenticate(const Arguments &args);
 	// Class methods
 
 	// Accessors

@@ -40,7 +40,8 @@ void SVN::InitModule(Handle<Object> target)
 	ct->InstanceTemplate()->SetInternalFieldCount(1);
 	ct->SetClassName(String::NewSymbol("SVN"));
 
-	//NODE_SET_PROTOTYPE_METHOD(ct, "cat", cat);
+	NODE_SET_PROTOTYPE_METHOD(ct, "authenticate", __authenticate);
+	NODE_SET_PROTOTYPE_METHOD(ct, "cat", __cat);
 
 	target->Set(String::NewSymbol("SVN"), ct->GetFunction());
 }
@@ -58,7 +59,7 @@ Handle<Value> SVN::New(const Arguments &args)
 	return args.This();
 }
 
-/*Handle<Value> SVN::cat(const Arguments &args)
+Handle<Value> SVN::__cat(const Arguments &args)
 {
 	HandleScope scope;
 	Local<String> url;
@@ -70,7 +71,15 @@ Handle<Value> SVN::New(const Arguments &args)
 	svn_opt_revision_t revision;
 
 	revision.value.number = svn_opt_revision_unspecified;
-}*/
+}
+Handle<Value> SVN::__authenticate(const Arguments &args)
+{
+	HandleScope scope;
+
+	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
+
+	return Undefined();
+}
 
 Handle<String> SVN::error(svn_error_t *error)
 {
