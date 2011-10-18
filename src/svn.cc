@@ -69,6 +69,7 @@ Handle<Value> SVN::__cat(const Arguments &args)
 	svn_stream_t *out;
 	svn_stringbuf_t *buf;
 	svn_opt_revision_t revision;
+	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
 
 	revision.value.number = svn_opt_revision_unspecified;
 }
