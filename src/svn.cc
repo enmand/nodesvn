@@ -74,31 +74,55 @@ Handle<Value> SVN::__cat(const Arguments &args)
 	revision.value.number = svn_opt_revision_unspecified;
 }
 
+// We currently only push the "simple provider" for basic user/pass
+// authentication. Others may follow.
 Handle<Value> SVN::__authenticate(const Arguments &args)
 {
 	HandleScope scope;
-
 	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
 
-	if(args.Length() < 2 && (args[0]->IsString() && args[1]->IsString()))
-	{
-		return ThrowException(Exception::Error(
-				String::New("You must provide both the username and the password for authentication")
-			));
-	}
+	// Add our providers for authentication and set up
+	// our client for proper authentication
+	svn->init_auth();
 
-	String::AsciiValue username(args[0]->ToString());
-	String::AsciiValue password(args[0]->ToString());
-	svn->authenticate(*username, *password);
+	// If we have a username and password passed in, setting those
+	// to the SVN_AUTH_PARAM_DEFAULT_USERNAME and SVN_AUTH_PARAM_DEFAULT_PASSWORD
+	// will allow us to use the "simple providers" from Subversion.
+	if(args.Length() == 2 && (args[0]->IsString() && args[1]->IsString()))
+	{
+		String::AsciiValue username(args[0]->ToString());
+		String::AsciiValue password(args[0]->ToString());
+		svn->simple_authentication(*username, *password);
+	}
 
 	return Undefined();
 }
 
-void SVN::authenticate(const char *user, const char *secret)
+void SVN::init_auth()
 {
-	svn_auth_provider_object_t *providers;
-	
-	providers = apr_array_make(this->pool, 2, sizeof(svn_auth_provider_object_t*));
+	svn_auth_provider_object_t *_provider;
+	svn_auth_baton_t *auth_baton;
+	apr_array_header_t *providers = apr_array_make(this->pool, 2, sizeof(svn_auth_provider_object_t *));
+
+
+	svn_auth_get_simple_provider2(&_provider, NULL, NULL, this->pool);
+	APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = _provider;
+
+	svn_auth_open(&auth_baton, providers, this->pool);
+	svn_auth_set_parameter(auth_baton, SVN_AUTH_PARAM_NON_INTERACTIVE, "");
+	this->ctx->auth_baton = auth_baton;
+}
+
+
+
+void SVN::simple_authentication(const char *username, const char *password)
+{
+	svn_auth_set_parameter(this->ctx->auth_baton,
+				apr_pstrdup(this->pool, "SVN_AUTH_PARAM_DEFAULT_USERNAME"),
+				apr_pstrdup(this->pool, username));
+	svn_auth_set_parameter(this->ctx->auth_baton,
+				apr_pstrdup(this->pool, "SVN_AUTH_PARAM_DEFAULT_PASSWORD"),
+				apr_pstrdup(this->pool, password));
 }
 
 Handle<String> SVN::error(svn_error_t *error)

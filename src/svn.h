@@ -43,6 +43,9 @@ public:
 	SVN(const char *config);
 	static void InitModule(Handle<Object> target); // V8/Node initializer
 	static Handle<Value> New(const Arguments &args); // 'new' construct
+	
+	void init_auth();
+	void simple_authentication(const char *username, const char *password);
 
 	~SVN()
 	{
@@ -54,7 +57,7 @@ public:
 protected:
 	// SVN-defined functions
 	static Handle<Value> __checkout(const Arguments &args);
-	static Handle<Value> __import(const Arguments &argss);
+	static Handle<Value> __import(const Arguments &args);
 	static Handle<Value> __blame(const Arguments &args);
 	static Handle<Value> __cat(const Arguments &args);
 	static Handle<Value> __copy(const Arguments &args);
@@ -74,7 +77,7 @@ protected:
 
 	// SVN baton authentication
 	static Handle<Value> __authenticate(const Arguments &args);
-	void authenticate(const char *user, const char *secret);
+
 	// Class methods
 
 	// Accessors
