@@ -27,8 +27,11 @@ SVN::SVN(const char *config = NULL)
 		svn_pool_destroy(this->pool);
 		this->pool = NULL;
 		return;
-
 	}
+
+	// Add our providers for authentication and set up
+	// our client for proper authentication
+	this->init_auth();
 }
 
 void SVN::InitModule(Handle<Object> target)
@@ -80,10 +83,6 @@ Handle<Value> SVN::__authenticate(const Arguments &args)
 {
 	HandleScope scope;
 	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
-
-	// Add our providers for authentication and set up
-	// our client for proper authentication
-	svn->init_auth();
 
 	// If we have a username and password passed in, setting those
 	// to the SVN_AUTH_PARAM_DEFAULT_USERNAME and SVN_AUTH_PARAM_DEFAULT_PASSWORD
