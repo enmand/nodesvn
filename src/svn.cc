@@ -142,10 +142,16 @@ Handle<String> SVN::error(svn_error_t *error)
 	{
 		char buffer[256];
 		svn_strerror(err_it->apr_err, buffer, sizeof(buffer));
-		String::Concat(strerror, String::New(" ( "));
-		String::Concat(strerror, String::New(buffer));
-		String::Concat(strerror, String::New(" ) "));
-		String::Concat(strerror, String::New(err_it->message));
+		strerror = String::Concat(strerror, String::New(" ( "));
+		strerror = String::Concat(strerror, String::New(buffer));
+		strerror = String::Concat(strerror, String::New(" ) "));
+		strerror = String::Concat(strerror, String::New(err_it->message));
+
+		err_it = err_it->child;
+		if(err_it != NULL)
+		{
+			strerror = String::Concat(strerror, String::New("\n"));
+		}
 	}
 	return scope.Close(strerror);
 }
