@@ -150,7 +150,7 @@ void SVN::init_auth()
 	svn_auth_provider_object_t *_provider;
 	svn_auth_baton_t *auth_baton;
 
-	apr_array_header_t *providers = apr_array_make(this->pool, 8, sizeof(svn_auth_provider_object_t *));
+	apr_array_header_t *providers = apr_array_make(this->pool, 10, sizeof(svn_auth_provider_object_t *));
 
 #ifdef DARWIN
 	svn_auth_get_keychain_simple_provider(&_provider, this->pool);
