@@ -20,7 +20,6 @@
 
 // Node/V8
 #include <node.h>
-#include <node_events.h>
 #include <v8.h>
 
 // SVN Includes
