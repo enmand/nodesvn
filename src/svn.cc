@@ -165,19 +165,19 @@ void SVN::init_auth()
 
 	svn_auth_open(&auth_baton, providers, this->pool);
 	
+	svn_auth_set_parameter(auth_baton, SVN_AUTH_PARAM_NON_INTERACTIVE, "");
 	this->ctx->auth_baton = auth_baton;
 }
-
 
 
 void SVN::simple_authentication(const char *username, const char *password)
 {
 	svn_auth_set_parameter(this->ctx->auth_baton, 
-				SVN_AUTH_PARAM_DEFAULT_USERNAME,
-				username);
+				apr_pstrdup(this->pool, SVN_AUTH_PARAM_DEFAULT_USERNAME),
+				apr_pstrdup(this->pool, username));
 	svn_auth_set_parameter(this->ctx->auth_baton,
-				SVN_AUTH_PARAM_DEFAULT_PASSWORD,
-				password);
+				apr_pstrdup(this->pool, SVN_AUTH_PARAM_DEFAULT_PASSWORD),
+				apr_pstrdup(this->pool, password));
 }
 
 Handle<String> SVN::error(svn_error_t *error)
