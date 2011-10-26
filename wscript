@@ -6,13 +6,13 @@ def set_options(opt):
 def configure(conf):
   conf.check_tool("compiler_cxx")
   conf.check_tool("node_addon")
-#  conf.check(lib='svn_fs-1', libpath=build_paths('lib'))
-#  conf.check(lib='svn_fs_base-1', libpath=build_paths('lib'))
-#  conf.check(lib='svn_fs_fs-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_fs-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_fs_base-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_fs_fs-1', libpath=build_paths('lib'))
   conf.check(lib='svn_client-1', libpath=build_paths('lib'))
-#  conf.check(lib='svn_subr-1', libpath=build_paths('lib'))
-#  conf.check(lib='svn_repos-1', libpath=build_paths('lib'))
-#  conf.check(lib='svn_ra-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_subr-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_repos-1', libpath=build_paths('lib'))
+  conf.check(lib='svn_ra-1', libpath=build_paths('lib'))
   conf.check(lib='apr-1', libpath=build_paths('lib'))
   conf.check(lib='aprutil-1', libpath=build_paths('lib'));
 
