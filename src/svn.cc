@@ -136,12 +136,13 @@ Handle<Value> SVN::__authenticate(const Arguments &args)
 	// will allow us to use the "simple providers" from Subversion.
 	if(args.Length() == 2 && (args[0]->IsString() && args[1]->IsString()))
 	{
-		String::AsciiValue username(args[0]->ToString());
-		String::AsciiValue password(args[0]->ToString());
+		String::Utf8Value username(args[0]->ToString());
+		String::Utf8Value password(args[1]->ToString());
 		svn->simple_authentication(*username, *password);
+		return scope.Close(Boolean::New(true));
 	}
 
-	return Undefined();
+	return scope.Close(Boolean::New(false));
 }
 
 void SVN::init_auth()
