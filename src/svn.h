@@ -61,7 +61,7 @@ public:
 	}
 
 protected:
-	// SVN-defined functions
+	// SVN-defined functions, that are available to NodeJS
 	static Handle<Value> __checkout(const Arguments &args);
 	static Handle<Value> __import(const Arguments &args);
 	static Handle<Value> __blame(const Arguments &args);
@@ -80,6 +80,8 @@ protected:
 	static Handle<Value> __revert(const Arguments &args);
 	static Handle<Value> __status(const Arguments &args);
 	static Handle<Value> __update(const Arguments &args);
+
+	Handle<Value> do_cat(const Handle<String> revision, svn_opt_revision_t revision);
 
 	// SVN baton authentication
 	static Handle<Value> __authenticate(const Arguments &args);
