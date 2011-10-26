@@ -13,6 +13,11 @@
 #ifndef SVN_H
 #define SVN_H
 
+// I'm not really sure why the compiler doesn't define __DARWIN__ on Lion
+#ifdef __APPLE__
+#define DARWIN
+#endif
+
 // Node/V8
 #include <node.h>
 #include <node_events.h>
@@ -26,6 +31,7 @@
 #include <svn_pools.h>
 #include <svn_path.h>
 #include <svn_utf.h>
+#include <svn_auth.h>
 #include <svn_client.h>
 
 // Other
