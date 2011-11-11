@@ -24,7 +24,7 @@ def build(bld):
   obj.libpath = build_paths('lib') ;
   obj.target = "nodesvn"
   obj.source = "src/svn.cc"
-  obj.includes = build_paths('include') + build_paths('include/subversion-1') + build_paths('include/apr-1/')
+  obj.includes = build_paths('include') + build_paths('include/subversion-1') + build_paths('include/apr-1/') + build_paths('include/apr-1.0')
 
 def all(bld):
   configure(bld);
