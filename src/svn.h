@@ -80,7 +80,7 @@ protected:
 	static Handle<Value> __status(const Arguments &args);
 	static Handle<Value> __update(const Arguments &args);
 
-	Handle<Value> do_cat(const Handle<String> revision, svn_opt_revision_t revision);
+	Handle<Value> do_cat(const Handle<String> url, svn_opt_revision_t revision);
 
 	// SVN baton authentication
 	static Handle<Value> __authenticate(const Arguments &args);
