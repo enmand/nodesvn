@@ -20,7 +20,7 @@ def configure(conf):
 def build(bld):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")
   obj.cxxflags = ["-g", "-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-Wall"]
-  obj.lib = ['svn_client-1', 'apr-1', 'aprutil-1'];
+  obj.lib = ['svn_client-1', 'apr-1', 'aprutil-1', 'lib'];
   obj.libpath = build_paths('lib') ;
   obj.target = "nodesvn"
   obj.source = "src/svn.cc"
