@@ -45,6 +45,8 @@ void SVN::InitModule(Handle<Object> target)
 
 	NODE_SET_PROTOTYPE_METHOD(ct, "authenticate", __authenticate);
 	NODE_SET_PROTOTYPE_METHOD(ct, "cat", __cat);
+	NODE_SET_PROTOTYPE_METHOD(ct, "open", __open);
+	NODE_SET_PROTOTYPE_METHOD(ct, "fs_file_contents", __fs_file_contents);
 
 	target->Set(String::NewSymbol("SVN"), ct->GetFunction());
 }
@@ -60,6 +62,38 @@ Handle<Value> SVN::New(const Arguments &args)
 	svn->Wrap(args.This());
 
 	return args.This();
+}
+
+Handle<Value> SVN::__open(const Arguments &args)
+{
+	HandleScope scope;
+	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
+
+	if (args.Length() != 1 || !args[0]->IsString())
+	{
+		return ThrowException(Exception::Error(
+			String::New("Please enter a filesystem path")
+		));
+	}
+
+	String::Utf8Value path(args[0]->ToString());
+	svn_repos_t *repos = NULL;
+	apr_pool_t *subpool = svn_pool_create(svn->pool);
+	svn_error_t *err;
+
+	if( (err = svn_repos_open(&repos, *path, subpool)) )
+	{
+		svn_pool_destroy(subpool);
+		subpool = NULL;
+		return ThrowException(Exception::Error(
+			svn->error(err)
+		));
+	}
+}
+
+Handle<Value> SVN::__fs_file_contents(const Arguments &args)
+{
+	
 }
 
 Handle<Value> SVN::__cat(const Arguments &args)

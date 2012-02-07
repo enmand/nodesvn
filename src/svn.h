@@ -80,6 +80,12 @@ protected:
 	static Handle<Value> __status(const Arguments &args);
 	static Handle<Value> __update(const Arguments &args);
 
+	// Some filesystem operations
+	static Handle<Value> __fs_file_contents(const Arguments &args);
+	static Handle<Value> __open(const Arguments &args);
+	static Handle<Value> __fs_open(const Arguments &args);
+
+	// Functions to help out
 	Handle<Value> do_cat(const Handle<String> url, svn_opt_revision_t revision);
 
 	// SVN baton authentication
