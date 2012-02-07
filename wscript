@@ -1,5 +1,5 @@
 import platform
-test_paths = ['/opt/local/']
+test_paths = ['/opt/local/', '/usr']
 
 def set_options(opt):
 	opt.tool_options("compiler_cxx")
@@ -42,5 +42,6 @@ def build_paths(type):
 	def normal(path):
 		if path[-1] == '/':
 			return path[:-1];
+		return path;
 	
 	return map(lambda path: normal(path)+'/'+type, test_paths[:]);
