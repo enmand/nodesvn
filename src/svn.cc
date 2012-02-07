@@ -102,6 +102,10 @@ Handle<Value> SVN::__cat(const Arguments &args)
 	Local<String> url;
 	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
 	svn_opt_revision_t revision;
+	apr_pool_t *subpool = svn_pool_create(svn->pool);
+	svn_error_t *err;
+	svn_opt_revision_t peg_revision = { svn_opt_revision_unspecified };
+
 
 	switch(args.Length())
 	{
@@ -130,29 +134,18 @@ Handle<Value> SVN::__cat(const Arguments &args)
 			));
 	}
 
-	return scope.Close(svn->do_cat(url, revision));
-}
-
-Handle<Value> SVN::do_cat(const Handle<String> url, svn_opt_revision_t revision)
-{
-	HandleScope scope;
-
-	apr_pool_t *subpool = svn_pool_create(this->pool);
-
 	String::Utf8Value url_utf(url);
-	svn_error_t *err;
-	svn_opt_revision_t peg_revision = { svn_opt_revision_unspecified };
 	
 	// pool and buffers setup
 	svn_stringbuf_t *buf = svn_stringbuf_create("", subpool);
 	svn_stream_t *out = svn_stream_from_stringbuf(buf, subpool);
 
-	if( (err = svn_client_cat2(out, *url_utf, &peg_revision, &revision, this->ctx, subpool)) )
+	if( (err = svn_client_cat2(out, *url_utf, &peg_revision, &revision, svn->ctx, subpool)) )
 	{
 		svn_pool_destroy(subpool);
 		subpool = NULL;
 		return ThrowException(Exception::Error(
-			this->error(err)
+			svn->error(err)
 		));
 	}
 	return scope.Close(String::New(buf->data, buf->len));
