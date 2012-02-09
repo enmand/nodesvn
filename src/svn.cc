@@ -46,7 +46,7 @@ void SVN::InitModule(Handle<Object> target)
 	NODE_SET_PROTOTYPE_METHOD(ct, "authenticate", __authenticate);
 	NODE_SET_PROTOTYPE_METHOD(ct, "cat", __cat);
 	NODE_SET_PROTOTYPE_METHOD(ct, "open", __open);
-	NODE_SET_PROTOTYPE_METHOD(ct, "fs_file_contents", __fs_file_contents);
+	NODE_SET_PROTOTYPE_METHOD(ct, "file_contents", __file_contents);
 
 	target->Set(String::NewSymbol("SVN"), ct->GetFunction());
 }
@@ -68,32 +68,88 @@ Handle<Value> SVN::__open(const Arguments &args)
 {
 	HandleScope scope;
 	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
+	svn_error_t *err;
 
 	if (args.Length() != 1 || !args[0]->IsString())
 	{
-		return ThrowException(Exception::Error(
-			String::New("Please enter a filesystem path")
-		));
+		ERROR("Please enter a filesystem path");
 	}
 
 	String::Utf8Value path(args[0]->ToString());
-	svn_repos_t *repos = NULL;
-	apr_pool_t *subpool = svn_pool_create(svn->pool);
-	svn_error_t *err;
+	svn->_lock.pool = svn_pool_create(svn->pool);
 
-	if( (err = svn_repos_open(&repos, *path, subpool)) )
+	if( (err = svn_repos_open(&svn->_lock.repos, *path, svn->_lock.pool)) )
 	{
-		svn_pool_destroy(subpool);
-		subpool = NULL;
-		return ThrowException(Exception::Error(
-			svn->error(err)
-		));
+		svn_pool_destroy(svn->_lock.pool);
+		ERROR(svn->error(err));
 	}
+
+	return scope.Close(Boolean::New(true));
 }
 
-Handle<Value> SVN::__fs_file_contents(const Arguments &args)
+Handle<Value> SVN::__file_contents(const Arguments &args)
 {
+	HandleScope scope;
+	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
+
+	svn_revnum_t rev;
+	svn_revnum_t head;
+	svn_error_t *err;
+	svn_fs_root_t *root;
+
+	switch(args.Length())
+	{
+		case 2:
+			if(args[1]->IsNumber())
+			{
+				rev = args[1]->ToNumber()->Value();
+			} else
+			{
+				rev = -1;
+			}
+		case 1:
+			if( !args[0]->IsString() )
+			{
+				ERROR("Please provide a file to get the contents of");
+			}
+	}
+
+	String::Utf8Value path(args[0]->ToString());
 	
+	if (svn->_lock.repos == NULL)
+	{
+		ERROR("Specify a repository with subversion.open");
+	}
+
+	svn_fs_t *fs = svn_repos_fs(svn->_lock.repos);
+
+
+	if ( (err = svn_fs_youngest_rev(&head, fs, svn->_lock.pool) ))
+	{
+		ERROR(svn->error(err));
+	}
+
+	if( (err = svn_fs_revision_root(&root, fs, head, svn->_lock.pool) ))
+	{
+		ERROR(svn->error(err));
+	}
+	
+	svn_stream_t *contents;
+	svn_filesize_t *length = new svn_filesize_t;
+
+	if ( (err = svn_fs_file_length(length, root, *path, svn->_lock.pool) ))
+	{
+		ERROR(svn->error(err));
+	}
+
+	if ( (err = svn_fs_file_contents(&contents, root , *path, svn->_lock.pool) ))
+	{
+		ERROR(svn->error(err));
+	}
+
+	char *out = new char[(apr_size_t)*length];
+	svn_stream_read(contents, out, (apr_size_t*)length);
+	return scope.Close(String::New(out));
 }
 
 Handle<Value> SVN::__cat(const Arguments &args)
