@@ -92,8 +92,7 @@ Handle<Value> SVN::__file_contents(const Arguments &args)
 	HandleScope scope;
 	SVN *svn = ObjectWrap::Unwrap<SVN>(args.This());
 
-	svn_revnum_t rev;
-	svn_revnum_t head;
+	svn_revnum_t rev = -1, head = 0;
 	svn_error_t *err;
 	svn_fs_root_t *root;
 
@@ -103,9 +102,6 @@ Handle<Value> SVN::__file_contents(const Arguments &args)
 			if(args[1]->IsNumber())
 			{
 				rev = args[1]->ToNumber()->Value();
-			} else
-			{
-				rev = -1;
 			}
 		case 1:
 			if( !args[0]->IsString() )
@@ -129,11 +125,10 @@ Handle<Value> SVN::__file_contents(const Arguments &args)
 		ERROR(svn->error(err));
 	}
 
-	if (rev > head || rev == -1)
+	if (rev > head || rev < 0)
 	{
 		rev = head;
 	}
-
 
 	if( (err = svn_fs_revision_root(&root, fs, rev, svn->_lock.pool) ))
 	{
