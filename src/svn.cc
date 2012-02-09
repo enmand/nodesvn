@@ -179,15 +179,11 @@ Handle<Value> SVN::__cat(const Arguments &args)
 			if(args[0]->IsString())
 				url = args[0]->ToString();
 			else
-				return ThrowException(Exception::Error(
-					String::New("Your URL path must be a string")
-				));
+				ERROR("Your URL path must be a string");
 			revision.kind = svn_opt_revision_head;
 		break;
 		default:
-			return ThrowException(Exception::Error(
-				String::New("Expected: url[,revision]")
-			));
+			ERROR("Expected: url[,revision]");
 	}
 
 	String::Utf8Value url_utf(url);
@@ -200,9 +196,7 @@ Handle<Value> SVN::__cat(const Arguments &args)
 	{
 		svn_pool_destroy(subpool);
 		subpool = NULL;
-		return ThrowException(Exception::Error(
-			svn->error(err)
-		));
+		ERROR(svn->error(err));
 	}
 	return scope.Close(String::New(buf->data, buf->len));
 }
@@ -263,9 +257,8 @@ void SVN::simple_authentication(const char *username, const char *password)
 				apr_pstrdup(this->pool, password));
 }
 
-Handle<String> SVN::error(svn_error_t *error)
+const char* SVN::error(svn_error_t *error)
 {
-	HandleScope scope;
 	svn_error_t *err_it = error;
 	Local<String> strerror = String::New("SVN Error Occured: ");
 
@@ -284,7 +277,9 @@ Handle<String> SVN::error(svn_error_t *error)
 			strerror = String::Concat(strerror, String::New("\n"));
 		}
 	}
-	return scope.Close(strerror);
+
+	String::Utf8Value err(strerror);
+	return *err;
 }
 
 Persistent<FunctionTemplate> SVN::ct;
