@@ -37,6 +37,11 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+#define ERROR(msg)\
+	return ThrowException(Exception::Error(\
+		String::New(msg)\
+	));
+
 using namespace node;
 using namespace v8;
 
