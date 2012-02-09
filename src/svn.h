@@ -45,6 +45,22 @@
 using namespace node;
 using namespace v8;
 
+struct node_repos_t {
+	apr_pool_t *pool;
+	svn_repos_t *repos;
+};
+
+struct node_fs_t {
+	struct node_repos_t *node_repos;
+	svn_fs_t *fs;
+};
+
+struct node_fs_root_t
+{
+	struct node_repos_t *repos;
+	svn_fs_root_t *root;
+};
+
 class SVN : public ObjectWrap
 {
 public:
@@ -102,6 +118,7 @@ private:
 	apr_pool_t *pool;
 	svn_client_ctx_t *ctx;
 
+	node_repos_t _lock;
 	const char* config; // Path to config	
 	Handle<String> error(svn_error_t *error);
 };
