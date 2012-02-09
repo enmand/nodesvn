@@ -102,9 +102,8 @@ protected:
 	static Handle<Value> __update(const Arguments &args);
 
 	// Some filesystem operations
-	static Handle<Value> __fs_file_contents(const Arguments &args);
+	static Handle<Value> __file_contents(const Arguments &args);
 	static Handle<Value> __open(const Arguments &args);
-	static Handle<Value> __fs_open(const Arguments &args);
 
 	// SVN baton authentication
 	static Handle<Value> __authenticate(const Arguments &args);
@@ -119,8 +118,10 @@ private:
 	svn_client_ctx_t *ctx;
 
 	node_repos_t _lock;
+
 	const char* config; // Path to config	
-	Handle<String> error(svn_error_t *error);
+	const char* error(svn_error_t *error);
+
 };
 
 #endif
