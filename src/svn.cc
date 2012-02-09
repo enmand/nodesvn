@@ -129,7 +129,13 @@ Handle<Value> SVN::__file_contents(const Arguments &args)
 		ERROR(svn->error(err));
 	}
 
-	if( (err = svn_fs_revision_root(&root, fs, head, svn->_lock.pool) ))
+	if (rev > head || rev == -1)
+	{
+		rev = head;
+	}
+
+
+	if( (err = svn_fs_revision_root(&root, fs, rev, svn->_lock.pool) ))
 	{
 		ERROR(svn->error(err));
 	}
