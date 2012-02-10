@@ -1,0 +1,17 @@
+{
+	"version": "0.1.5",
+	"name": "nodesvn",
+	"main": "./build/default/nodesvn.node",
+	"description": "Node.JS bindings to interacting with a Subversion (SVN) repository. Written in C++, this binding interacts directly with the SVN libraries to provide quick, easy access to your Subversion repositories",
+	"keywords": ["SVN", "node", "c++", "subversion", "repository", "version control", "vcs", "scm"],
+	"author": {
+		"name": "Daniel Enman",
+		"email": "enmand@gmail.com"
+	},
+	"main": "subversion",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/enmand/nodesvn.git"
+	},
+	"engines": {"node": ">=0.6"}
+}
