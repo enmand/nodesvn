@@ -50,17 +50,6 @@ struct node_repos_t {
 	svn_repos_t *repos;
 };
 
-struct node_fs_t {
-	struct node_repos_t *node_repos;
-	svn_fs_t *fs;
-};
-
-struct node_fs_root_t
-{
-	struct node_repos_t *repos;
-	svn_fs_root_t *root;
-};
-
 class SVN : public ObjectWrap
 {
 public:
