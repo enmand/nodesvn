@@ -1,5 +1,5 @@
 {
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"name": "nodesvn",
 	"main": "./build/default/nodesvn.node",
 	"description": "Node.JS bindings to interacting with a Subversion (SVN) repository. Written in C++, this binding interacts directly with the SVN libraries to provide quick, easy access to your Subversion repositories",
