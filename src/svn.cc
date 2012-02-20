@@ -138,6 +138,9 @@ Handle<Value> SVN::__file_contents(const Arguments &args)
 	svn_stream_t *contents;
 	svn_filesize_t length;
 
+	svn_stringbuf_t *buf = svn_stringbuf_create("", svn->_lock.pool);
+	svn_stream_t *out = svn_stream_from_stringbuf(buf, svn->_lock.pool);
+
 	if ( (err = svn_fs_file_length(&length, root, *path, svn->_lock.pool) ))
 	{
 		ERROR(svn->error(err));
@@ -148,9 +151,10 @@ Handle<Value> SVN::__file_contents(const Arguments &args)
 		ERROR(svn->error(err));
 	}
 
-	char *out = new char[length];
-	svn_stream_read(contents, out, (apr_size_t*)&length);
-	return scope.Close(String::New(out));
+	// Copy the contents to a stream attached to a stringbuf so
+	// we can pass it back to V8
+	svn_stream_copy3(contents, out, NULL, NULL, svn->_lock.pool);
+	return scope.Close(String::New(buf->data, buf->len));
 }
 
 Handle<Value> SVN::__cat(const Arguments &args)
