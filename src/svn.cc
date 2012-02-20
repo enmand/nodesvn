@@ -136,9 +136,9 @@ Handle<Value> SVN::__file_contents(const Arguments &args)
 	}
 	
 	svn_stream_t *contents;
-	svn_filesize_t *length = new svn_filesize_t;
+	svn_filesize_t length;
 
-	if ( (err = svn_fs_file_length(length, root, *path, svn->_lock.pool) ))
+	if ( (err = svn_fs_file_length(&length, root, *path, svn->_lock.pool) ))
 	{
 		ERROR(svn->error(err));
 	}
@@ -148,8 +148,8 @@ Handle<Value> SVN::__file_contents(const Arguments &args)
 		ERROR(svn->error(err));
 	}
 
-	char *out = new char[(apr_size_t)*length];
-	svn_stream_read(contents, out, (apr_size_t*)length);
+	char *out = new char[length];
+	svn_stream_read(contents, out, (apr_size_t*)&length);
 	return scope.Close(String::New(out));
 }
 
